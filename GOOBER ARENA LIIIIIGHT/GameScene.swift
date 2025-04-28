@@ -17,8 +17,18 @@ class GameScene: SKScene {
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
     
+    let square = SKShapeNode()
+    let rect = CGRect(x: 100, y: 100, width: 100, height: 100)
+    
     override func sceneDidLoad() {
-
+        
+        square.path = CGPath(rect: rect, transform: nil)
+        square.fillColor = .blue
+        square.strokeColor = .black
+        square.lineWidth = 3
+        
+        addChild(square)
+        
         self.lastUpdateTime = 0
         
         // Get label node from scene and store it for use later
@@ -105,5 +115,8 @@ class GameScene: SKScene {
         }
         
         self.lastUpdateTime = currentTime
+        
+        print("boi")
+        square.zRotation += 5.0 * CGFloat(dt)
     }
 }
