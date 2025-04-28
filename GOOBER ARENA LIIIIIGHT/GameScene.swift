@@ -7,8 +7,16 @@
 
 import SpriteKit
 import GameplayKit
+import Foundation
+import GameController
 
 class GameScene: SKScene {
+    
+    let goober = SKSpriteNode(imageNamed: "goooober")
+    var virtualController: GCVirtualController?
+    
+    var px: CGFloat = 0
+    var py: CGFloat = 0
     
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
@@ -20,6 +28,18 @@ class GameScene: SKScene {
     let square = SKShapeNode()
     let rect = CGRect(x: 100, y: 100, width: 100, height: 100)
     
+    override func didMove(to view: SKView) {
+        scene?.anchorPoint = .zero
+        scene?.size = CGSize(width: 600, height: 800)
+        
+        goober.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        goober.zPosition = 10
+        goober.setScale(0.05)
+        addChild(goober)
+        
+        connectVirtualController()
+    }
+    
     override func sceneDidLoad() {
         
         square.path = CGPath(rect: rect, transform: nil)
@@ -27,11 +47,19 @@ class GameScene: SKScene {
         square.strokeColor = .black
         square.lineWidth = 3
         
-        addChild(square)
+//        addChild(square)
         
         self.lastUpdateTime = 0
     }
     
+    func connectVirtualController() {
+        let controllerConfig = GCVirtualController.Configuration()
+        controllerConfig.elements = [GCInputLeftThumbstick]
+        
+        let controller = GCVirtualController(configuration: controllerConfig)
+        controller.connect()
+        virtualController = controller
+    }
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
@@ -51,7 +79,17 @@ class GameScene: SKScene {
         
         self.lastUpdateTime = currentTime
         
-        print("boi")
+        // Joystick input
+        px = CGFloat((virtualController?.controller?.extendedGamepad?.leftThumbstick.xAxis.value)!)
+        
+        if px >= 0.5 {
+            goober.position.x += 1
+        }
+        
+        if px <= -0.5 {
+            goober.position.x -= 1
+        }
+        
         square.zRotation += 5.0 * CGFloat(dt)
     }
 }
