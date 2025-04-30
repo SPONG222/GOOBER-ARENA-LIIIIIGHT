@@ -12,8 +12,8 @@ import GameController
 
 class GameScene: SKScene {
     
-    let goober = SKSpriteNode(imageNamed: "goooober")
-    let goober2 = SKSpriteNode(imageNamed: "goooober")
+    let goober = SKSpriteNode(imageNamed: "Dragondih")
+    let goober2 = SKSpriteNode(imageNamed: "Dragondih")
     var virtualController: GCVirtualController?
     
     var px: CGFloat = 0
@@ -38,12 +38,12 @@ class GameScene: SKScene {
         
         goober.position = CGPoint(x: size.width / 2 - 200, y: size.height / 2)
         goober.zPosition = 10
-        goober.setScale(0.03)
+        goober.setScale(0.3)
         addChild(goober)
         
-        goober2.position = CGPoint(x: size.width / 2 +s 200, y: size.height / 2)
+        goober2.position = CGPoint(x: size.width / 2 + 200, y: size.height / 2)
         goober2.zPosition = 10
-        goober2.setScale(0.03)
+        goober2.setScale(0.3)
         addChild(goober2)
         
         connectVirtualController()
