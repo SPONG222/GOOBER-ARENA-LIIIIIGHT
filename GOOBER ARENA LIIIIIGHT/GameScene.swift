@@ -77,18 +77,22 @@ class GameScene: SKScene {
         
         if px >= 0.5 {
             goober.position.x += 3
+            goober.zRotation = 0.0
         }
         
         if px <= -0.5 {
             goober.position.x -= 3
+            goober.zRotation = 3.14
         }
         
         if p2x >= 0.5 {
             goober2.position.x += 3
+            goober2.zRotation = 0.0
         }
         
         if p2x <= -0.5 {
             goober2.position.x -= 3
+            goober2.zRotation = 3.14
         }
         
         py = CGFloat((virtualController?.controller?.extendedGamepad?.leftThumbstick.yAxis.value)!)
@@ -96,18 +100,22 @@ class GameScene: SKScene {
         
         if py >= 0.5 {
             goober.position.y += 3
+            goober.zRotation = 0.5 * 3.14
         }
         
         if py <= -0.5 {
             goober.position.y -= 3
+            goober.zRotation = 1.5 * 3.14
         }
         
         if p2y >= 0.5 {
             goober2.position.y += 3
+            goober2.zRotation = 0.5 * 3.14
         }
         
         if p2y <= -0.5 {
             goober2.position.y -= 3
+            goober2.zRotation = 1.5 * 3.14
         }
     }
     
