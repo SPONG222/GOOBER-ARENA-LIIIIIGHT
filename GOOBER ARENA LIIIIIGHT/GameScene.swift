@@ -13,10 +13,14 @@ import GameController
 class GameScene: SKScene {
     
     let goober = SKSpriteNode(imageNamed: "goooober")
+    let goober2 = SKSpriteNode(imageNamed: "goooober")
     var virtualController: GCVirtualController?
     
     var px: CGFloat = 0
     var py: CGFloat = 0
+    
+    var p2x: CGFloat = 0
+    var p2y: CGFloat = 0
     
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
@@ -32,10 +36,15 @@ class GameScene: SKScene {
         scene?.anchorPoint = .zero
         scene?.size = CGSize(width: 600, height: 800)
         
-        goober.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        goober.position = CGPoint(x: size.width / 2 - 200, y: size.height / 2)
         goober.zPosition = 10
-        goober.setScale(0.05)
+        goober.setScale(0.03)
         addChild(goober)
+        
+        goober2.position = CGPoint(x: size.width / 2 +s 200, y: size.height / 2)
+        goober2.zPosition = 10
+        goober2.setScale(0.03)
+        addChild(goober2)
         
         connectVirtualController()
     }
@@ -54,11 +63,52 @@ class GameScene: SKScene {
     
     func connectVirtualController() {
         let controllerConfig = GCVirtualController.Configuration()
-        controllerConfig.elements = [GCInputLeftThumbstick]
+        controllerConfig.elements = [GCInputLeftThumbstick, GCInputRightThumbstick]
         
         let controller = GCVirtualController(configuration: controllerConfig)
         controller.connect()
         virtualController = controller
+    }
+    
+    func updatePlayers() {
+        // Joystick input
+        px = CGFloat((virtualController?.controller?.extendedGamepad?.leftThumbstick.xAxis.value)!)
+        p2x = CGFloat((virtualController?.controller?.extendedGamepad?.rightThumbstick.xAxis.value)!)
+        
+        if px >= 0.5 {
+            goober.position.x += 3
+        }
+        
+        if px <= -0.5 {
+            goober.position.x -= 3
+        }
+        
+        if p2x >= 0.5 {
+            goober2.position.x += 3
+        }
+        
+        if p2x <= -0.5 {
+            goober2.position.x -= 3
+        }
+        
+        py = CGFloat((virtualController?.controller?.extendedGamepad?.leftThumbstick.yAxis.value)!)
+        p2y = CGFloat((virtualController?.controller?.extendedGamepad?.rightThumbstick.yAxis.value)!)
+        
+        if py >= 0.5 {
+            goober.position.y += 3
+        }
+        
+        if py <= -0.5 {
+            goober.position.y -= 3
+        }
+        
+        if p2y >= 0.5 {
+            goober2.position.y += 3
+        }
+        
+        if p2y <= -0.5 {
+            goober2.position.y -= 3
+        }
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -79,17 +129,6 @@ class GameScene: SKScene {
         
         self.lastUpdateTime = currentTime
         
-        // Joystick input
-        px = CGFloat((virtualController?.controller?.extendedGamepad?.leftThumbstick.xAxis.value)!)
-        
-        if px >= 0.5 {
-            goober.position.x += 1
-        }
-        
-        if px <= -0.5 {
-            goober.position.x -= 1
-        }
-        
-        square.zRotation += 5.0 * CGFloat(dt)
+        updatePlayers()
     }
 }
