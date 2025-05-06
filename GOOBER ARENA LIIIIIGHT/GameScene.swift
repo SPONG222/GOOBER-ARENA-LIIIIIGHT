@@ -16,6 +16,19 @@ class GameScene: SKScene {
     let goober2 = SKSpriteNode(imageNamed: "Dragondih")
     var virtualController: GCVirtualController?
     
+    // a map that can be loaded into the game
+    let level1 = [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0,
+        0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ]
+    
     var px: CGFloat = 0
     var py: CGFloat = 0
     
@@ -24,6 +37,8 @@ class GameScene: SKScene {
     
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
+    
+    var level = [SKSpriteNode]()
     
     private var lastUpdateTime : TimeInterval = 0
     private var label : SKLabelNode?
@@ -47,6 +62,9 @@ class GameScene: SKScene {
         addChild(goober2)
         
         connectVirtualController()
+        
+        // generate the level from the array
+        genLevel(levelin: level1)
     }
     
     override func sceneDidLoad() {
@@ -56,9 +74,48 @@ class GameScene: SKScene {
         square.strokeColor = .black
         square.lineWidth = 3
         
-//        addChild(square)
-        
         self.lastUpdateTime = 0
+    }
+    
+    // takes in a tile type and outputs the name of the corresponding image
+    func typeToImageName(type: Int) -> String {
+        if type == 1 {
+            return "rock"
+        } else if type == 2 {
+            return "tree"
+        } else {
+            return ""
+        }
+    }
+    
+    // helper function to convert indexes into coordinates
+    func indexToPoint(index: Int) -> CGPoint {
+        
+        // black magic math i came up with to convert a 1d index into 2d coords
+        let x = (index % 19) * 32
+        let ny = ((index - (index % 19)) / 19) * 32
+        let y = 510 - ny
+        
+        return CGPoint(x: x, y: y)
+    }
+    
+    // takes in a level and loads it into the game
+    func genLevel(levelin: [Int]) {
+        for i in 0..<levelin.count {
+            if(levelin[i] != 0) {
+                let wall = SKSpriteNode(imageNamed: typeToImageName(type: levelin[i]))
+                wall.position = indexToPoint(index: i)
+                print(wall.position)
+                wall.anchorPoint = .zero
+                wall.setScale(1.0)
+                wall.zPosition = 8
+                level.append(wall)
+            }
+        }
+        
+        for i in 0..<level.count {
+            addChild(level[i])
+        }
     }
     
     func connectVirtualController() {
@@ -136,6 +193,8 @@ class GameScene: SKScene {
         }
         
         self.lastUpdateTime = currentTime
+        
+//        print(goober.position)
         
         updatePlayers()
     }
