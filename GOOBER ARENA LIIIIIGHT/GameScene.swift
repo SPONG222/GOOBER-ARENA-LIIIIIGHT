@@ -194,6 +194,21 @@ class GameScene: SKScene {
         }
         
         print(hit)
+        let bufferX: CGFloat = 20
+        let bufferY: CGFloat = 20
+
+        let minX: CGFloat = 20.0 + bufferX
+        let maxX: CGFloat = 580.0 - bufferX
+        let minY: CGFloat = 280.0 + bufferY
+        let maxY: CGFloat = 520.0 - bufferY
+
+        goober.position.x = min(max(goober.position.x, minX), maxX)
+        goober.position.y = min(max(goober.position.y, minY), maxY)
+
+        goober2.position.x = min(max(goober2.position.x, minX), maxX)
+        goober2.position.y = min(max(goober2.position.y, minY), maxY)
+
+
     }
     
     override func update(_ currentTime: TimeInterval) {
