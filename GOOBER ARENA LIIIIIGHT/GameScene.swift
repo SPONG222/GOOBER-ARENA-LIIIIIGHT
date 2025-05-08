@@ -209,8 +209,8 @@ class GameScene: SKScene {
             }
         }
         
-        let bufferX: CGFloat = 20
-        let bufferY: CGFloat = 20
+        let bufferX: CGFloat = -20
+        let bufferY: CGFloat = -20
 
         let minX: CGFloat = 20.0 + bufferX
         let maxX: CGFloat = 580.0 - bufferX
