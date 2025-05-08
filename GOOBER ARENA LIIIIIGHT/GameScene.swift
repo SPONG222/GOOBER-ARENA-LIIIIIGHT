@@ -20,12 +20,12 @@ class GameScene: SKScene {
     // a map that can be loaded into the game
     let level1 = [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0,
+        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0,
+        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0,
         0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ]
@@ -40,6 +40,8 @@ class GameScene: SKScene {
     var graphs = [String : GKGraph]()
     
     var level = [SKSpriteNode]()
+    var shootButton: SKSpriteNode!
+
     
     private var lastUpdateTime : TimeInterval = 0
     private var label : SKLabelNode?
@@ -68,6 +70,15 @@ class GameScene: SKScene {
         
         // generate the level from the array
         genLevel(levelin: level1)
+        
+        shootButton = SKSpriteNode(imageNamed: "button") // or use a shape/color node
+        shootButton.name = "button"
+        shootButton.position = CGPoint(x: size.width / 9, y: size.height / 2 + 50)
+
+        shootButton.zPosition = 10
+        addChild(shootButton)
+
+
     }
     
     override func sceneDidLoad() {
@@ -235,4 +246,15 @@ class GameScene: SKScene {
 //        print("Goober 2 Position: \(goober2.position)")
         updatePlayers()
     }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        
+        if atPoint(location) == shootButton {
+            let shooter = Shoot()
+            shooter.shootBullet(from: goober, in: self, at: location)
+        }
+    }
+
+
 }
