@@ -182,18 +182,22 @@ class GameScene: SKScene {
     }
     
     func playerCollisions() {
-        var hit = false
         for i in 0..<level.count {
             if(BoxCollision(aPos: CGPoint(x: goober.position.x - 12, y: goober.position.y - 12), aSize: CGSize(width: 24, height: 24), bPos: level[i].position, bSize: level[i].size)) {
                 if(py <= -0.5) { goober.position.y += 1.5 }
                 if(py >= 0.5) { goober.position.y -= 1.5 }
                 if(px <= -0.5) { goober.position.x += 1.5 }
                 if(px >= 0.5) { goober.position.x -= 1.5 }
-                hit = true
+            }
+            
+            if(BoxCollision(aPos: CGPoint(x: goober2.position.x - 12, y: goober2.position.y - 12), aSize: CGSize(width: 24, height: 24), bPos: level[i].position, bSize: level[i].size)) {
+                if(p2y <= -0.5) { goober2.position.y += 1.5 }
+                if(p2y >= 0.5) { goober2.position.y -= 1.5 }
+                if(p2x <= -0.5) { goober2.position.x += 1.5 }
+                if(p2x >= 0.5) { goober2.position.x -= 1.5 }
             }
         }
         
-        print(hit)
         let bufferX: CGFloat = 20
         let bufferY: CGFloat = 20
 
@@ -207,8 +211,6 @@ class GameScene: SKScene {
 
         goober2.position.x = min(max(goober2.position.x, minX), maxX)
         goober2.position.y = min(max(goober2.position.y, minY), maxY)
-
-
     }
     
     override func update(_ currentTime: TimeInterval) {
