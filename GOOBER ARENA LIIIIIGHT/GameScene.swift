@@ -194,8 +194,8 @@ class GameScene: SKScene {
         
         self.lastUpdateTime = currentTime
         
-//        print(goober.position)
-        
+        print("Goober 1 Position: \(goober.position)")
+        print("Goober 2 Position: \(goober2.position)")
         updatePlayers()
     }
 }
