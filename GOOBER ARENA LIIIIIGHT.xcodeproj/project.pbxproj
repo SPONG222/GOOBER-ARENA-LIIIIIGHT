@@ -13,9 +13,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		388EF7422DBAC5E10056F5C2 /* GOOBER ARENA LIIIIIGHT */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			explicitFileTypes = {
-				ball = image.png;
-			};
 			path = "GOOBER ARENA LIIIIIGHT";
 			sourceTree = "<group>";
 		};

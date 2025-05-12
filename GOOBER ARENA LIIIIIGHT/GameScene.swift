@@ -13,7 +13,7 @@ import GameController
 class GameScene: SKScene {
     
     let goober = SKSpriteNode(imageNamed: "Dragondih")
-    let goober2 = SKSpriteNode(imageNamed: "Dragondih")
+    let goober2 = SKSpriteNode(imageNamed: "booger")
     let hb = SKShapeNode()
     var virtualController: GCVirtualController?
     
@@ -122,7 +122,7 @@ class GameScene: SKScene {
                 wall.position = indexToPoint(index: i)
                 print(wall.position)
                 wall.anchorPoint = .zero
-                wall.setScale(1.0)
+                wall.setScale(0.125)
                 wall.zPosition = 8
                 level.append(wall)
             }
@@ -195,6 +195,7 @@ class GameScene: SKScene {
     
     func playerCollisions() {
         for i in 0..<level.count {
+            
             if(BoxCollision(aPos: CGPoint(x: goober.position.x - 12, y: goober.position.y - 12), aSize: CGSize(width: 24, height: 24), bPos: level[i].position, bSize: level[i].size)) {
                 if(py <= -0.5) { goober.position.y += 1.5 }
                 if(py >= 0.5) { goober.position.y -= 1.5 }
