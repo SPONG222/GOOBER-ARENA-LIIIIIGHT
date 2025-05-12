@@ -41,7 +41,8 @@ class GameScene: SKScene {
     
     var level = [SKSpriteNode]()
     var shootButton: SKSpriteNode!
-
+    
+    var shoots = [SKSpriteNode]()
     
     private var lastUpdateTime : TimeInterval = 0
     private var label : SKLabelNode?
@@ -224,6 +225,15 @@ class GameScene: SKScene {
         goober2.position.y = min(max(goober2.position.y, minY), maxY)
     }
     
+    func projectileCollisions() {
+        for i in 0..<shoots.count {
+            if(BoxCollision(aPos: CGPoint(x: goober2.position.x - 12, y: goober2.position.y - 12), aSize: CGSize(width: 40, height: 40), bPos: shoots[i].position, bSize: shoots[i].size)) {
+                // Projectile from first player hit second player
+                
+            }
+        }
+    }
+    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         
@@ -245,6 +255,7 @@ class GameScene: SKScene {
 //        print("Goober 1 Position: \(goober.position)")
 //        print("Goober 2 Position: \(goober2.position)")
         updatePlayers()
+        projectileCollisions()
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
@@ -252,7 +263,7 @@ class GameScene: SKScene {
         
         if atPoint(location) == shootButton {
             let shooter = Shoot()
-            shooter.shootBullet(from: goober, in: self, at: location)
+            shoots.append(shooter.shootBullet(from: goober, in: self, at: location))
         }
     }
 

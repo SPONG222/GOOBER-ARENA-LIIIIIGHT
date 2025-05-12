@@ -3,7 +3,7 @@ import GameplayKit
 
 class Shoot: SKSpriteNode {
 
-    func shootBullet(from ship: SKSpriteNode, in scene: SKScene, at location: CGPoint) {
+    func shootBullet(from ship: SKSpriteNode, in scene: SKScene, at location: CGPoint) -> SKSpriteNode {
         let bullet = SKSpriteNode(imageNamed: "ball")
         bullet.zPosition = -5
 
@@ -23,6 +23,8 @@ class Shoot: SKSpriteNode {
         bullet.physicsBody?.isDynamic = false
 
         scene.addChild(bullet)
+        
+        return bullet
     }
 
 }
