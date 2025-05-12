@@ -11,6 +11,8 @@ import Foundation
 import GameController
 
 class GameScene: SKScene {
+    let gooberHealthLabel = SKLabelNode()
+    let goober2HealthLabel = SKLabelNode()
     var gooberHealth = 4
     var goober2Health = 4
     let goober = SKSpriteNode(imageNamed: "Dragondih")
@@ -81,7 +83,19 @@ class GameScene: SKScene {
         shootButton.zPosition = 10
         addChild(shootButton)
 
+        gooberHealthLabel.text = "Goober 1 HP: \(gooberHealth)"
+        gooberHealthLabel.fontSize = 40
+        gooberHealthLabel.fontColor = .white
+        gooberHealthLabel.position = CGPoint(x: 290, y: 500)
+        gooberHealthLabel.zPosition = 20
+        addChild(gooberHealthLabel)
 
+        goober2HealthLabel.text = "Goober 2 HP: \(goober2Health)"
+        goober2HealthLabel.fontSize = 40
+        goober2HealthLabel.fontColor = .white
+        goober2HealthLabel.position = CGPoint(x: 290, y: 280)
+        goober2HealthLabel.zPosition = 20
+        addChild(goober2HealthLabel)
     }
     
     override func sceneDidLoad() {
@@ -276,6 +290,9 @@ class GameScene: SKScene {
 //        print("Goober 2 Position: \(goober2.position)")
         updatePlayers()
         projectileCollisions()
+        goober2HealthLabel.text = "Goober 2 HP: \(goober2Health >= 0 ? goober2Health : 0)"
+        gooberHealthLabel.text = "Goober 1 HP: \(gooberHealth >= 0 ? gooberHealth : 0)"
+
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
