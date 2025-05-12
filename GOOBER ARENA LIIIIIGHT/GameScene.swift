@@ -11,7 +11,8 @@ import Foundation
 import GameController
 
 class GameScene: SKScene {
-    
+    var gooberHealth = 4
+    var goober2Health = 4
     let goober = SKSpriteNode(imageNamed: "Dragondih")
     let goober2 = SKSpriteNode(imageNamed: "booger")
     let hb = SKShapeNode()
@@ -132,7 +133,7 @@ class GameScene: SKScene {
             addChild(level[i])
         }
     }
-    
+
     func connectVirtualController() {
         let controllerConfig = GCVirtualController.Configuration()
         controllerConfig.elements = [GCInputLeftThumbstick, GCInputRightThumbstick]
@@ -227,10 +228,20 @@ class GameScene: SKScene {
     }
     
     func projectileCollisions() {
-        for i in 0..<shoots.count {
-            if(BoxCollision(aPos: CGPoint(x: goober2.position.x - 12, y: goober2.position.y - 12), aSize: CGSize(width: 40, height: 40), bPos: shoots[i].position, bSize: shoots[i].size)) {
-                // Projectile from first player hit second player
+        for i in (0..<shoots.count).reversed() {
+            let shoot = shoots[i]
+            
+            if BoxCollision(aPos: CGPoint(x: goober2.position.x - 12, y: goober2.position.y - 12),aSize: CGSize(width: 40, height: 40),bPos:shoot.position, bSize: shoot.size) {
+                goober2Health -= 1
+               // goober2HealthLabel.text = "P2 HP: \(goober2Health)"
+                shoot.removeFromParent()
+                shoots.remove(at: i)
                 
+                if goober2Health <= 0 {
+                    print("Goober 2 is dead")
+                    goober2.removeFromParent()
+                    
+                }
             }
         }
     }
@@ -252,7 +263,6 @@ class GameScene: SKScene {
         }
         
         self.lastUpdateTime = currentTime
-        
 //        print("Goober 1 Position: \(goober.position)")
 //        print("Goober 2 Position: \(goober2.position)")
         updatePlayers()
