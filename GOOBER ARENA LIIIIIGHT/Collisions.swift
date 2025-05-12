@@ -9,6 +9,14 @@ import SpriteKit
 import GameplayKit
 import Foundation
 
+class TileProperties {
+    var type: String
+    
+    init(type: String) {
+        self.type = type
+    }
+}
+
 func PointBoxCollision(point: CGPoint, boxPos: CGPoint, boxSize: CGSize) -> Bool {
     if (point.x >= boxPos.x && point.x <= boxPos.x + boxSize.width && point.y >= boxPos.y && point.y <= boxPos.y + boxSize.height) {
         return true

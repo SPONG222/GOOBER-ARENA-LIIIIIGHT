@@ -41,6 +41,7 @@ class GameScene: SKScene {
     var graphs = [String : GKGraph]()
     
     var level = [SKSpriteNode]()
+    var props = [TileProperties]()
     var shootButton: SKSpriteNode!
     
     var shoots = [SKSpriteNode]()
@@ -96,9 +97,9 @@ class GameScene: SKScene {
     // takes in a tile type and outputs the name of the corresponding image
     func typeToImageName(type: Int) -> String {
         if type == 1 {
-            return "rock"
+            return "rocknew"
         } else if type == 2 {
-            return "tree"
+            return "coolergrass"
         } else {
             return ""
         }
@@ -123,9 +124,16 @@ class GameScene: SKScene {
                 wall.position = indexToPoint(index: i)
                 print(wall.position)
                 wall.anchorPoint = .zero
-                wall.setScale(0.125)
+                if(typeToImageName(type: levelin[i]) == "coolergrass") {
+                    wall.setScale(0.2)
+                } else {
+                    wall.setScale(1.0)
+                }
                 wall.zPosition = 8
                 level.append(wall)
+                
+                let properties = TileProperties(type: typeToImageName(type: levelin[i]))
+                props.append(properties)
             }
         }
         
@@ -196,19 +204,20 @@ class GameScene: SKScene {
     
     func playerCollisions() {
         for i in 0..<level.count {
-            
-            if(BoxCollision(aPos: CGPoint(x: goober.position.x - 12, y: goober.position.y - 12), aSize: CGSize(width: 24, height: 24), bPos: level[i].position, bSize: level[i].size)) {
-                if(py <= -0.5) { goober.position.y += 1.5 }
-                if(py >= 0.5) { goober.position.y -= 1.5 }
-                if(px <= -0.5) { goober.position.x += 1.5 }
-                if(px >= 0.5) { goober.position.x -= 1.5 }
-            }
-            
-            if(BoxCollision(aPos: CGPoint(x: goober2.position.x - 12, y: goober2.position.y - 12), aSize: CGSize(width: 24, height: 24), bPos: level[i].position, bSize: level[i].size)) {
-                if(p2y <= -0.5) { goober2.position.y += 1.5 }
-                if(p2y >= 0.5) { goober2.position.y -= 1.5 }
-                if(p2x <= -0.5) { goober2.position.x += 1.5 }
-                if(p2x >= 0.5) { goober2.position.x -= 1.5 }
+            if(props[i].type == "rocknew") {
+                if(BoxCollision(aPos: CGPoint(x: goober.position.x - 12, y: goober.position.y - 12), aSize: CGSize(width: 24, height: 24), bPos: level[i].position, bSize: level[i].size)) {
+                    if(py <= -0.5) { goober.position.y += 1.5 }
+                    if(py >= 0.5) { goober.position.y -= 1.5 }
+                    if(px <= -0.5) { goober.position.x += 1.5 }
+                    if(px >= 0.5) { goober.position.x -= 1.5 }
+                }
+                
+                if(BoxCollision(aPos: CGPoint(x: goober2.position.x - 12, y: goober2.position.y - 12), aSize: CGSize(width: 24, height: 24), bPos: level[i].position, bSize: level[i].size)) {
+                    if(p2y <= -0.5) { goober2.position.y += 1.5 }
+                    if(p2y >= 0.5) { goober2.position.y -= 1.5 }
+                    if(p2x <= -0.5) { goober2.position.x += 1.5 }
+                    if(p2x >= 0.5) { goober2.position.x -= 1.5 }
+                }
             }
         }
         
