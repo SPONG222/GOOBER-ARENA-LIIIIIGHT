@@ -17,7 +17,6 @@ class GameScene: SKScene {
     var goober2Health = 4
     let goober = SKSpriteNode(imageNamed: "Dragondih")
     let goober2 = SKSpriteNode(imageNamed: "booger")
-    let hb = SKShapeNode()
     var virtualController: GCVirtualController?
     
     // a map that can be loaded into the game
@@ -45,8 +44,9 @@ class GameScene: SKScene {
     var level = [SKSpriteNode]()
     var props = [TileProperties]()
     var shootButton: SKSpriteNode!
+    var shootButton2: SKSpriteNode!
     
-    var shoots = [SKSpriteNode]()
+    var shoots = [Shoot]()
     
     private var lastUpdateTime : TimeInterval = 0
     private var label : SKLabelNode?
@@ -80,7 +80,7 @@ class GameScene: SKScene {
         shootButton.name = "button"
         shootButton.position = CGPoint(x: size.width / 9, y: size.height / 2 + 50)
 
-        shootButton.zPosition = 10
+        shootButton.zPosition = 15
         addChild(shootButton)
 
         gooberHealthLabel.text = "Goober 1 HP: \(gooberHealth)"
@@ -96,6 +96,13 @@ class GameScene: SKScene {
         goober2HealthLabel.position = CGPoint(x: 290, y: 280)
         goober2HealthLabel.zPosition = 20
         addChild(goober2HealthLabel)
+        
+        shootButton2 = SKSpriteNode(imageNamed: "button") // or use a shape/color node
+        shootButton2.name = "button2"
+        shootButton2.position = CGPoint(x: size.width - (size.width / 9), y: size.height / 2 + 50)
+
+        shootButton2.zPosition = 15
+        addChild(shootButton2)
     }
     
     override func sceneDidLoad() {
@@ -252,18 +259,44 @@ class GameScene: SKScene {
     
     func projectileCollisions() {
         for i in (0..<shoots.count).reversed() {
-            let shoot = shoots[i]
+            for j in 0..<level.count {
+                if(props[j].type == "rocknew") {
+                    if(BoxCollision(aPos: CGPoint(x: shoots[i].position.x - 4, y: shoots[i].position.y - 4), aSize: CGSize(width: 8, height: 8), bPos: level[j].position, bSize: level[j].size)) {
+                        shoots[i].removeFromParent()
+                    }
+                }
+            }
             
-            if BoxCollision(aPos: CGPoint(x: goober2.position.x - 12, y: goober2.position.y - 12),aSize: CGSize(width: 40, height: 40),bPos:shoot.position, bSize: shoot.size) {
-                goober2Health -= 1
-               // goober2HealthLabel.text = "P2 HP: \(goober2Health)"
-                shoot.removeFromParent()
-                shoots.remove(at: i)
+            if(shoots[i].owner == "goober" && gooberHealth > 0) {
+                let shoot = shoots[i]
                 
-                if goober2Health <= 0 {
-                    print("Goober 2 is dead")
-                    goober2.removeFromParent()
+                if BoxCollision(aPos: CGPoint(x: goober2.position.x - 20, y: goober2.position.y - 20),aSize: CGSize(width: 40, height: 40),bPos:shoot.position, bSize: shoot.size) {
+                    goober2Health -= 1
+                   // goober2HealthLabel.text = "P2 HP: \(goober2Health)"
+                    shoot.removeFromParent()
+                    shoots.remove(at: i)
                     
+                    if goober2Health <= 0 {
+                        print("Goober 2 is dead")
+                        goober2.removeFromParent()
+                    }
+                }
+            } else {
+                if(shoots[i].owner == "goober2" && goober2Health > 0) {
+                    let shoot = shoots[i]
+                    
+                    if BoxCollision(aPos: CGPoint(x: goober.position.x - 20, y: goober.position.y - 20),aSize: CGSize(width: 40, height: 40),bPos: shoot.position, bSize: shoot.size) {
+                        gooberHealth -= 1
+                       // goober2HealthLabel.text = "P2 HP: \(goober2Health)"
+                        shoot.removeFromParent()
+                        shoots.remove(at: i)
+                        
+                        if gooberHealth <= 0 {
+                            print("Goober 1 is dead")
+                            goober.removeFromParent()
+                            continue
+                        }
+                    }
                 }
             }
         }
@@ -298,9 +331,14 @@ class GameScene: SKScene {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         
-        if atPoint(location) == shootButton {
+        if atPoint(location) == shootButton && gooberHealth > 0 {
             let shooter = Shoot()
-            shoots.append(shooter.shootBullet(from: goober, in: self, at: location))
+            shoots.append(shooter.shootBullet(from: goober, in: self, at: location, pOwner: "goober", pSprite: "ball"))
+        }
+        
+        if atPoint(location) == shootButton2 && goober2Health > 0 {
+            let shooter = Shoot()
+            shoots.append(shooter.shootBullet(from: goober2, in: self, at: location, pOwner: "goober2", pSprite: "slime"))
         }
     }
 
