@@ -84,14 +84,16 @@ class GameScene: SKScene {
         addChild(shootButton)
 
         gooberHealthLabel.text = "Goober 1 HP: \(gooberHealth)"
-        gooberHealthLabel.fontSize = 40
+        gooberHealthLabel.fontName = "Arial"
+        gooberHealthLabel.fontSize = 25
         gooberHealthLabel.fontColor = .white
-        gooberHealthLabel.position = CGPoint(x: 290, y: 500)
+        gooberHealthLabel.position = CGPoint(x: 290, y: 510)
         gooberHealthLabel.zPosition = 20
         addChild(gooberHealthLabel)
 
         goober2HealthLabel.text = "Goober 2 HP: \(goober2Health)"
-        goober2HealthLabel.fontSize = 40
+        goober2HealthLabel.fontName = "Arial"
+        goober2HealthLabel.fontSize = 25
         goober2HealthLabel.fontColor = .white
         goober2HealthLabel.position = CGPoint(x: 290, y: 280)
         goober2HealthLabel.zPosition = 20
