@@ -94,7 +94,7 @@ class GameScene: SKScene {
         addChild(winButton)
         winButton.isHidden = true
         
-        winButtonText.text = "Retry"
+        winButtonText.text = "Rematch"
         winButtonText.fontSize = 20
         winButtonText.fontColor = .white
         winButtonText.position = CGPoint(x: 290, y: 365)
