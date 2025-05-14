@@ -19,17 +19,21 @@ class GameScene: SKScene {
     let goober2 = SKSpriteNode(imageNamed: "booger")
     var virtualController: GCVirtualController?
     
+    var shootCooldown: TimeInterval = 0.5
+        var lastShootTimeGoober: TimeInterval = -1
+        var lastShootTimeGoober2: TimeInterval = -1
+    
     // a map that can be loaded into the game
     let level1 = [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0,
         0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0,
-        0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,
+        0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ]
     
     var px: CGFloat = 0
@@ -330,19 +334,31 @@ class GameScene: SKScene {
 
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        let location = touch.location(in: self)
-        
-        if atPoint(location) == shootButton && gooberHealth > 0 {
-            let shooter = Shoot()
-            shoots.append(shooter.shootBullet(from: goober, in: self, at: location, pOwner: "goober", pSprite: "ball"))
+            for touch in touches {
+                let location = touch.location(in: self)
+                let nodesAtPoint = nodes(at: location)
+
+                for node in nodesAtPoint {
+                    if node.name == "button" {
+                        attemptShoot(player: "goober", shooter: goober, time: CACurrentMediaTime(), spriteName: "ball") // Use your bullet sprite name
+                    } else if node.name == "button2" {
+                        attemptShoot(player: "goober2", shooter: goober2, time: CACurrentMediaTime(), spriteName: "slime") // Use your bullet sprite name
+                    }
+                }
+            }
         }
-        
-        if atPoint(location) == shootButton2 && goober2Health > 0 {
-            let shooter = Shoot()
-            shoots.append(shooter.shootBullet(from: goober2, in: self, at: location, pOwner: "goober2", pSprite: "slime"))
+
+        func attemptShoot(player: String, shooter: SKSpriteNode, time: TimeInterval, spriteName: String) {
+            if player == "goober" && (time - lastShootTimeGoober) >= shootCooldown {
+                let newShoot = Shoot().shootBullet(from: shooter, in: self, at: shooter.position, pOwner: "goober", pSprite: spriteName)
+                shoots.append(newShoot)
+                lastShootTimeGoober = time
+            } else if player == "goober2" && (time - lastShootTimeGoober2) >= shootCooldown {
+                let newShoot = Shoot().shootBullet(from: shooter, in: self, at: shooter.position, pOwner: "goober2", pSprite: spriteName)
+                shoots.append(newShoot)
+                lastShootTimeGoober2 = time
+            }
         }
-    }
 
 
 }
