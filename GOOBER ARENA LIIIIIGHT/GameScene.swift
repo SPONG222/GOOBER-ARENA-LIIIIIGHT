@@ -31,6 +31,7 @@ class GameScene: SKScene {
     
     // a map that can be loaded into the game
     let level1 = [
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0,
         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0,
@@ -41,6 +42,7 @@ class GameScene: SKScene {
         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0,
         0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0,
         2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
     ]
     
     var px: CGFloat = 0
@@ -168,7 +170,7 @@ class GameScene: SKScene {
         // black magic math i came up with to convert a 1d index into 2d coords
         let x = (index % 19) * 32
         let ny = ((index - (index % 19)) / 19) * 32
-        let y = 510 - ny
+        let y = 510 - ny + 48
         
         return CGPoint(x: x, y: y)
     }

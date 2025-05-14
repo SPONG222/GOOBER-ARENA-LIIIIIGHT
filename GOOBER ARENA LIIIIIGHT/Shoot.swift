@@ -13,10 +13,10 @@ class Shoot: SKSpriteNode {
         bullet.zRotation = ship.zRotation
         bullet.zPosition = ship.zPosition
 
-        let velocity: CGFloat = 1000.0
+        let velocity: CGFloat = 500.0
         let dx = cos(ship.zRotation) * velocity
         let dy = sin(ship.zRotation) * velocity
-        let moveAction = SKAction.move(by: CGVector(dx: dx, dy: dy), duration: 1.0)
+        let moveAction = SKAction.move(by: CGVector(dx: dx, dy: dy), duration: 1.5)
         let actionDone = SKAction.removeFromParent()
         bullet.run(SKAction.sequence([moveAction, actionDone]))
 
