@@ -18,6 +18,12 @@ class GameScene: SKScene {
     let goober = SKSpriteNode(imageNamed: "Dragondih")
     let goober2 = SKSpriteNode(imageNamed: "booger")
     var virtualController: GCVirtualController?
+    var winText = SKLabelNode()
+    
+    var winButton = SKShapeNode()
+    var winButtonText = SKLabelNode()
+    
+    var gameIsOver = false
     
     var shootCooldown: TimeInterval = 0.5
         var lastShootTimeGoober: TimeInterval = -1
@@ -25,15 +31,16 @@ class GameScene: SKScene {
     
     // a map that can be loaded into the game
     let level1 = [
-        0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+        0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0,
+        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0,
+        0, 0, 2, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0,
-        0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,
-        0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0,
+        2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ]
     
     var px: CGFloat = 0
@@ -57,7 +64,7 @@ class GameScene: SKScene {
     private var spinnyNode : SKShapeNode?
     
     let square = SKShapeNode()
-    var rect = CGRect(x: 100, y: 100, width: 100, height: 100)
+    var rect = CGRect(x: 238, y: 350, width: 100, height: 40)
     
     override func didMove(to view: SKView) {
         scene?.anchorPoint = .zero
@@ -73,17 +80,33 @@ class GameScene: SKScene {
         goober2.setScale(0.15)
         addChild(goober2)
         
-        addChild(square)
-        
         connectVirtualController()
         
         // generate the level from the array
         genLevel(levelin: level1)
         
+        winButton.path = CGPath(rect: rect, transform: nil)
+        winButton.fillColor = .gray
+        winButton.strokeColor = .black
+        winButton.lineWidth = 2
+        winButton.zPosition = 20
+        
+        addChild(winButton)
+        winButton.isHidden = true
+        
+        winButtonText.text = "Retry"
+        winButtonText.fontSize = 20
+        winButtonText.fontColor = .white
+        winButtonText.position = CGPoint(x: 290, y: 365)
+        winButtonText.zPosition = 21
+        
+        addChild(winButtonText)
+        winButtonText.isHidden = true
+        
         shootButton = SKSpriteNode(imageNamed: "button") // or use a shape/color node
         shootButton.name = "button"
         shootButton.position = CGPoint(x: size.width / 9, y: size.height / 2 + 50)
-
+        
         shootButton.zPosition = 15
         addChild(shootButton)
 
@@ -102,6 +125,13 @@ class GameScene: SKScene {
         goober2HealthLabel.position = CGPoint(x: 290, y: 280)
         goober2HealthLabel.zPosition = 20
         addChild(goober2HealthLabel)
+        
+        winText.text = ""
+        winText.fontSize = 50
+        winText.fontColor = .white
+        winText.position = CGPoint(x: 290, y: 400);
+        winText.zPosition = 25
+        addChild(winText)
         
         shootButton2 = SKSpriteNode(imageNamed: "button") // or use a shape/color node
         shootButton2.name = "button2"
@@ -284,7 +314,7 @@ class GameScene: SKScene {
                     
                     if goober2Health <= 0 {
                         print("Goober 2 is dead")
-                        goober2.removeFromParent()
+                        goober2.isHidden = true
                     }
                 }
             } else {
@@ -299,7 +329,7 @@ class GameScene: SKScene {
                         
                         if gooberHealth <= 0 {
                             print("Goober 1 is dead")
-                            goober.removeFromParent()
+                            goober.isHidden = true
                             continue
                         }
                     }
@@ -331,8 +361,44 @@ class GameScene: SKScene {
         projectileCollisions()
         goober2HealthLabel.text = "Goober 2 HP: \(goober2Health >= 0 ? goober2Health : 0)"
         gooberHealthLabel.text = "Goober 1 HP: \(gooberHealth >= 0 ? gooberHealth : 0)"
+        
+        if(!gameIsOver) {
+            if(gooberHealth <= 0) {
+                winText.text = "Goober 2 Wins"
+                gameIsOver = true
+                winButtonText.isHidden = false
+                winButton.isHidden = false
+            }
+            
+            if(goober2Health <= 0) {
+                print("test")
+                winText.text = "Goober 1 Wins"
+                gameIsOver = true
+                winButtonText.isHidden = false
+                winButton.isHidden = false
+            }
+        }
 
     }
+    
+    func restartGame() {
+        print("restarting game...")
+        
+        winText.text = ""
+        winButtonText.isHidden = true
+        winButton.isHidden = true
+        
+        goober.position = CGPoint(x: size.width / 2 - 200, y: size.height / 2)
+        goober2.position = CGPoint(x: size.width / 2 + 200, y: size.height / 2)
+        goober.isHidden = false
+        goober2.isHidden = false
+        
+        gooberHealth = 4
+        goober2Health = 4
+        
+        gameIsOver = false
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
             for touch in touches {
                 let location = touch.location(in: self)
@@ -341,8 +407,18 @@ class GameScene: SKScene {
                 for node in nodesAtPoint {
                     if node.name == "button" {
                         attemptShoot(player: "goober", shooter: goober, time: CACurrentMediaTime(), spriteName: "ball") // Use your bullet sprite name
-                    } else if node.name == "button2" {
+                    }
+                    
+                    if node.name == "button2" {
                         attemptShoot(player: "goober2", shooter: goober2, time: CACurrentMediaTime(), spriteName: "slime") // Use your bullet sprite name
+                    }
+                    
+                    if atPoint(location) == winButton && gameIsOver == true {
+                        restartGame()
+                    }
+                    
+                    if atPoint(location) == winButtonText && gameIsOver == true {
+                        restartGame()
                     }
                 }
             }
@@ -359,6 +435,5 @@ class GameScene: SKScene {
                 lastShootTimeGoober2 = time
             }
         }
+    }
 
-
-}
