@@ -11,6 +11,7 @@ import Foundation
 import GameController
 
 class GameScene: SKScene {
+    // game objects
     let gooberHealthLabel = SKLabelNode()
     let goober2HealthLabel = SKLabelNode()
     var gooberHealth = 4
@@ -18,10 +19,23 @@ class GameScene: SKScene {
     let goober = SKSpriteNode(imageNamed: "Dragondih")
     let goober2 = SKSpriteNode(imageNamed: "booger")
     var virtualController: GCVirtualController?
-    var winText = SKLabelNode()
+    var winText = SKLabelNode(fontNamed: "Arial")
+    
+    var mainMenuOpen = true
+    
+    let grassColor = UIColor(red: 0.2, green: 0.84, blue: 0.29, alpha: 1.0)
+    let roofColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
+    let sandColor = UIColor(red: 0.98, green: 0.82, blue: 0.47, alpha: 1.0)
+    
+    // menu objects
+    var mmTitle = SKLabelNode(text: "Goober Arena Light")
+    var mmLevel1 = SKLabelNode(text: "Grassy Arena")
+    var mmLevel2 = SKLabelNode(text: "Rooftop Arena")
+    var mmLevel3 = SKLabelNode(text: "Desert Arena")
     
     var winButton = SKShapeNode()
-    var winButtonText = SKLabelNode()
+    var winButtonText = SKLabelNode(fontNamed: "Arial")
+    var back2menu = SKLabelNode(fontNamed: "Arial")
     
     var gameIsOver = false
     
@@ -42,6 +56,36 @@ class GameScene: SKScene {
         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0,
         0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0,
         2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    ]
+    
+    let level2 = [
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4,
+        0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 4, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 4, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    ]
+    
+    let level3 = [
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 6, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 6, 0, 0,
+        0, 0, 6, 0, 6, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 6, 1, 1, 1, 1, 1, 0, 0, 6, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 6, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 0, 0, 0, 0,
+        0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 6, 0,
+        6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
     ]
     
@@ -71,6 +115,7 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         scene?.anchorPoint = .zero
         scene?.size = CGSize(width: 600, height: 800)
+        scene?.backgroundColor = grassColor
         
         goober.position = CGPoint(x: size.width / 2 - 200, y: size.height / 2)
         goober.zPosition = 10
@@ -85,7 +130,7 @@ class GameScene: SKScene {
         connectVirtualController()
         
         // generate the level from the array
-        genLevel(levelin: level1)
+//        genLevel(levelin: level1)
         
         winButton.path = CGPath(rect: rect, transform: nil)
         winButton.fillColor = .gray
@@ -93,8 +138,8 @@ class GameScene: SKScene {
         winButton.lineWidth = 2
         winButton.zPosition = 20
         
-        addChild(winButton)
-        winButton.isHidden = true
+//        addChild(winButton)
+//        winButton.isHidden = true
         
         winButtonText.text = "Rematch"
         winButtonText.fontSize = 20
@@ -104,6 +149,44 @@ class GameScene: SKScene {
         
         addChild(winButtonText)
         winButtonText.isHidden = true
+        
+        back2menu.text = "Back to menu"
+        back2menu.fontSize = 20
+        back2menu.fontColor = .white
+        back2menu.position = CGPoint(x: 290, y: 340)
+        back2menu.zPosition = 21
+        
+//        addChild(back2menu)
+        back2menu.isHidden = true
+        
+        mmTitle.text = "Goober Arena Light"
+        mmTitle.fontSize = 38
+        mmTitle.fontName = "Arial"
+        mmTitle.fontColor = .white
+        mmTitle.position = CGPoint(x: 300, y: 470)
+        mmTitle.zPosition = 20
+        addChild(mmTitle)
+        
+        mmLevel1.fontSize = 25
+        mmLevel1.fontName = "Arial"
+        mmLevel1.fontColor = .white
+        mmLevel1.position = CGPoint(x: 300, y: 400)
+        mmLevel1.zPosition = 20
+        addChild(mmLevel1)
+        
+        mmLevel2.fontSize = 25
+        mmLevel2.fontName = "Arial"
+        mmLevel2.fontColor = .white
+        mmLevel2.position = CGPoint(x: 300, y: 370)
+        mmLevel2.zPosition = 20
+        addChild(mmLevel2)
+        
+        mmLevel3.fontSize = 25
+        mmLevel3.fontName = "Arial"
+        mmLevel3.fontColor = .white
+        mmLevel3.position = CGPoint(x: 300, y: 340)
+        mmLevel3.zPosition = 20
+        addChild(mmLevel3)
         
         shootButton = SKSpriteNode(imageNamed: "button") // or use a shape/color node
         shootButton.name = "button"
@@ -141,6 +224,24 @@ class GameScene: SKScene {
 
         shootButton2.zPosition = 15
         addChild(shootButton2)
+        
+        setGameObjsHidden(hidden: true)
+        setMenuObjsHidden(hidden: false)
+    }
+    
+    func destroyLevel() {
+        for i in 0..<level.count {
+            level[i].removeFromParent()
+        }
+        
+        level = []
+    }
+    
+    func setMenuObjsHidden(hidden: Bool) {
+        mmTitle.isHidden = hidden
+        mmLevel1.isHidden = hidden
+        mmLevel2.isHidden = hidden
+        mmLevel3.isHidden = hidden
     }
     
     override func sceneDidLoad() {
@@ -159,6 +260,14 @@ class GameScene: SKScene {
             return "rocknew"
         } else if type == 2 {
             return "coolergrass"
+        } else if type == 3 {
+            return "rooftop brick"
+        } else if type == 4 {
+            return "rooftop stain"
+        } else if type == 5 {
+            return "sand"
+        } else if type == 6 {
+            return "sand spot"
         } else {
             return ""
         }
@@ -340,6 +449,26 @@ class GameScene: SKScene {
         }
     }
     
+    func mainMenu() {
+        
+    }
+    
+    func setGameObjsHidden(hidden: Bool) {
+        goober.isHidden = hidden
+        goober2.isHidden = hidden
+//        winText.isHidden = hidden
+//        winButton.isHidden = hidden
+//        winButtonText.isHidden = hidden
+        shootButton.isHidden = hidden
+        shootButton2.isHidden = hidden
+        gooberHealthLabel.isHidden = hidden
+        goober2HealthLabel.isHidden = hidden
+        
+        for i in 0..<level.count {
+            level[i].isHidden = hidden
+        }
+    }
+    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         
@@ -359,28 +488,56 @@ class GameScene: SKScene {
         self.lastUpdateTime = currentTime
 //        print("Goober 1 Position: \(goober.position)")
 //        print("Goober 2 Position: \(goober2.position)")
-        updatePlayers()
-        projectileCollisions()
-        goober2HealthLabel.text = "Goober 2 HP: \(goober2Health >= 0 ? goober2Health : 0)"
-        gooberHealthLabel.text = "Goober 1 HP: \(gooberHealth >= 0 ? gooberHealth : 0)"
         
-        if(!gameIsOver) {
-            if(gooberHealth <= 0) {
-                winText.text = "Goober 2 Wins"
-                gameIsOver = true
-                winButtonText.isHidden = false
-                winButton.isHidden = false
-            }
+        if(!mainMenuOpen) {
+            updatePlayers()
+            projectileCollisions()
+            goober2HealthLabel.text = "Goober 2 HP: \(goober2Health >= 0 ? goober2Health : 0)"
+            gooberHealthLabel.text = "Goober 1 HP: \(gooberHealth >= 0 ? gooberHealth : 0)"
             
-            if(goober2Health <= 0) {
-                print("test")
-                winText.text = "Goober 1 Wins"
-                gameIsOver = true
-                winButtonText.isHidden = false
-                winButton.isHidden = false
+            if(!gameIsOver) {
+                if(gooberHealth <= 0) {
+                    winText.text = "Goober 2 Wins"
+                    gameIsOver = true
+                    winButtonText.isHidden = false
+                    back2menu.isHidden = false
+                    winButton.isHidden = false
+                }
+                
+                if(goober2Health <= 0) {
+                    print("test")
+                    winText.text = "Goober 1 Wins"
+                    gameIsOver = true
+                    winButtonText.isHidden = false
+                    back2menu.isHidden = false
+                    winButton.isHidden = false
+                }
             }
+        } else {
+            mainMenu()
         }
 
+    }
+    
+    func loadMapFromLevel(level: Int) {
+        destroyLevel()
+        
+        if level == 1 {
+            genLevel(levelin: level1)
+            scene?.backgroundColor = grassColor
+        } else if level == 2 {
+            genLevel(levelin: level2)
+            scene?.backgroundColor = roofColor
+        } else if level == 3 {
+            genLevel(levelin: level3)
+            scene?.backgroundColor = sandColor
+        }
+        
+        restartGame()
+        setGameObjsHidden(hidden: false)
+        setMenuObjsHidden(hidden: true)
+        mainMenuOpen = false
+        gameIsOver = false
     }
     
     func restartGame() {
@@ -389,6 +546,7 @@ class GameScene: SKScene {
         winText.text = ""
         winButtonText.isHidden = true
         winButton.isHidden = true
+        back2menu.isHidden = true
         
         goober.position = CGPoint(x: size.width / 2 - 200, y: size.height / 2)
         goober2.position = CGPoint(x: size.width / 2 + 200, y: size.height / 2)
@@ -405,36 +563,68 @@ class GameScene: SKScene {
             for touch in touches {
                 let location = touch.location(in: self)
                 let nodesAtPoint = nodes(at: location)
-
-                for node in nodesAtPoint {
-                    if node.name == "button" {
-                        attemptShoot(player: "goober", shooter: goober, time: CACurrentMediaTime(), spriteName: "ball") // Use your bullet sprite name
+                
+                if !mainMenuOpen {
+                    for node in nodesAtPoint {
+                        if node.name == "button" {
+                            attemptShoot(player: "goober", shooter: goober, time: CACurrentMediaTime(), spriteName: "ball") // Use your bullet sprite name
+                        }
+                        
+                        if node.name == "button2" {
+                            attemptShoot(player: "goober2", shooter: goober2, time: CACurrentMediaTime(), spriteName: "slime") // Use your bullet sprite name
+                        }
+                        
+                        if atPoint(location) == winButton && gameIsOver == true {
+                            restartGame()
+                        }
+                        
+                        if atPoint(location) == winButtonText && gameIsOver == true {
+                            restartGame()
+                        }
+                        
+                        if atPoint(location) == back2menu && gameIsOver == true {
+                            scene?.backgroundColor = grassColor
+                            destroyLevel()
+                            restartGame()
+                            setGameObjsHidden(hidden: true)
+                            setMenuObjsHidden(hidden: false)
+                            mainMenuOpen = true
+                        }
                     }
-                    
-                    if node.name == "button2" {
-                        attemptShoot(player: "goober2", shooter: goober2, time: CACurrentMediaTime(), spriteName: "slime") // Use your bullet sprite name
+                } else {
+                    if atPoint(location) == mmLevel1 {
+                        print("map 1")
+                        loadMapFromLevel(level: 1)
+                        
                     }
-                    
-                    if atPoint(location) == winButton && gameIsOver == true {
-                        restartGame()
+                        
+                    if atPoint(location) == mmLevel2 {
+                        print("map 2")
+                        loadMapFromLevel(level: 2)
+                        
                     }
-                    
-                    if atPoint(location) == winButtonText && gameIsOver == true {
-                        restartGame()
+                        
+                    if atPoint(location) == mmLevel3 {
+                        print("map 3")
+                        loadMapFromLevel(level: 3)
+                        
                     }
                 }
+                
             }
         }
 
         func attemptShoot(player: String, shooter: SKSpriteNode, time: TimeInterval, spriteName: String) {
-            if player == "goober" && (time - lastShootTimeGoober) >= shootCooldown {
-                let newShoot = Shoot().shootBullet(from: shooter, in: self, at: shooter.position, pOwner: "goober", pSprite: spriteName)
-                shoots.append(newShoot)
-                lastShootTimeGoober = time
-            } else if player == "goober2" && (time - lastShootTimeGoober2) >= shootCooldown {
-                let newShoot = Shoot().shootBullet(from: shooter, in: self, at: shooter.position, pOwner: "goober2", pSprite: spriteName)
-                shoots.append(newShoot)
-                lastShootTimeGoober2 = time
+            if !mainMenuOpen {
+                if player == "goober" && (time - lastShootTimeGoober) >= shootCooldown {
+                    let newShoot = Shoot().shootBullet(from: shooter, in: self, at: shooter.position, pOwner: "goober", pSprite: spriteName)
+                    shoots.append(newShoot)
+                    lastShootTimeGoober = time
+                } else if player == "goober2" && (time - lastShootTimeGoober2) >= shootCooldown {
+                    let newShoot = Shoot().shootBullet(from: shooter, in: self, at: shooter.position, pOwner: "goober2", pSprite: spriteName)
+                    shoots.append(newShoot)
+                    lastShootTimeGoober2 = time
+                }
             }
         }
     }
