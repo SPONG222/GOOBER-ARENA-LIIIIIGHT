@@ -229,6 +229,7 @@ class GameScene: SKScene {
         setMenuObjsHidden(hidden: false)
     }
     
+    // zach
     func destroyLevel() {
         for i in 0..<level.count {
             level[i].removeFromParent()
@@ -237,6 +238,7 @@ class GameScene: SKScene {
         level = []
     }
     
+    // zach
     func setMenuObjsHidden(hidden: Bool) {
         mmTitle.isHidden = hidden
         mmLevel1.isHidden = hidden
@@ -254,6 +256,7 @@ class GameScene: SKScene {
         self.lastUpdateTime = 0
     }
     
+    // zach
     // takes in a tile type and outputs the name of the corresponding image
     func typeToImageName(type: Int) -> String {
         if type == 1 {
@@ -273,6 +276,7 @@ class GameScene: SKScene {
         }
     }
     
+    // zach
     // helper function to convert indexes into coordinates
     func indexToPoint(index: Int) -> CGPoint {
         
@@ -284,6 +288,8 @@ class GameScene: SKScene {
         return CGPoint(x: x, y: y)
     }
     
+    // zach
+    // this level code was ported from another project of mine: https://github.com/PancakeHat/leapform
     // takes in a level and loads it into the game
     func genLevel(levelin: [Int]) {
         for i in 0..<levelin.count {
@@ -310,6 +316,7 @@ class GameScene: SKScene {
         }
     }
 
+    // zach
     func connectVirtualController() {
         let controllerConfig = GCVirtualController.Configuration()
         controllerConfig.elements = [GCInputLeftThumbstick, GCInputRightThumbstick]
@@ -319,6 +326,7 @@ class GameScene: SKScene {
         virtualController = controller
     }
     
+    // all of us contributed
     func updatePlayers() {
         // Joystick input
         px = CGFloat((virtualController?.controller?.extendedGamepad?.leftThumbstick.xAxis.value)!)
@@ -370,6 +378,7 @@ class GameScene: SKScene {
         playerCollisions()
     }
     
+    // zach
     func playerCollisions() {
         for i in 0..<level.count {
             if(props[i].type == "rocknew") {
@@ -389,6 +398,7 @@ class GameScene: SKScene {
             }
         }
         
+        // archer
         let bufferX: CGFloat = -20
         let bufferY: CGFloat = -20
 
@@ -404,6 +414,7 @@ class GameScene: SKScene {
         goober2.position.y = min(max(goober2.position.y, minY), maxY)
     }
     
+    // zach
     func projectileCollisions() {
         for i in (0..<shoots.count).reversed() {
             for j in 0..<level.count {
@@ -453,6 +464,7 @@ class GameScene: SKScene {
         
     }
     
+    // zach
     func setGameObjsHidden(hidden: Bool) {
         goober.isHidden = hidden
         goober2.isHidden = hidden
@@ -519,6 +531,7 @@ class GameScene: SKScene {
 
     }
     
+    // zach
     func loadMapFromLevel(level: Int) {
         destroyLevel()
         
@@ -540,6 +553,7 @@ class GameScene: SKScene {
         gameIsOver = false
     }
     
+    // zach
     func restartGame() {
         print("restarting game...")
         

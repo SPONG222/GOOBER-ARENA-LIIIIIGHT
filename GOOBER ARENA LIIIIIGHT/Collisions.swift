@@ -9,6 +9,7 @@ import SpriteKit
 import GameplayKit
 import Foundation
 
+// zach
 class TileProperties {
     var type: String
     
@@ -17,6 +18,7 @@ class TileProperties {
     }
 }
 
+// zach
 func PointBoxCollision(point: CGPoint, boxPos: CGPoint, boxSize: CGSize) -> Bool {
     if (point.x >= boxPos.x && point.x <= boxPos.x + boxSize.width && point.y >= boxPos.y && point.y <= boxPos.y + boxSize.height) {
         return true
@@ -25,6 +27,7 @@ func PointBoxCollision(point: CGPoint, boxPos: CGPoint, boxSize: CGSize) -> Bool
     return false
 }
 
+// zach
 func BoxCollision(aPos: CGPoint, aSize: CGSize, bPos: CGPoint, bSize: CGSize) -> Bool {
     if(
         aPos.x <= bPos.x + bSize.width &&
