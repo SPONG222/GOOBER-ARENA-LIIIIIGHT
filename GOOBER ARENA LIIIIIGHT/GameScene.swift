@@ -194,7 +194,7 @@ class GameScene: SKScene {
         
         shootButton.zPosition = 15
         addChild(shootButton)
-
+//Archer below
         gooberHealthLabel.text = "Goober 1 HP: \(gooberHealth)"
         gooberHealthLabel.fontName = "Arial"
         gooberHealthLabel.fontSize = 25
@@ -217,7 +217,7 @@ class GameScene: SKScene {
         winText.position = CGPoint(x: 290, y: 400);
         winText.zPosition = 25
         addChild(winText)
-        
+        //archer end
         shootButton2 = SKSpriteNode(imageNamed: "button") // or use a shape/color node
         shootButton2.name = "button2"
         shootButton2.position = CGPoint(x: size.width - (size.width / 9), y: size.height / 2 + 50)
@@ -427,10 +427,9 @@ class GameScene: SKScene {
             
             if(shoots[i].owner == "goober" && gooberHealth > 0) {
                 let shoot = shoots[i]
-                
+                //archer
                 if BoxCollision(aPos: CGPoint(x: goober2.position.x - 20, y: goober2.position.y - 20),aSize: CGSize(width: 40, height: 40),bPos:shoot.position, bSize: shoot.size) {
                     goober2Health -= 1
-                   // goober2HealthLabel.text = "P2 HP: \(goober2Health)"
                     shoot.removeFromParent()
                     shoots.remove(at: i)
                     
@@ -442,10 +441,9 @@ class GameScene: SKScene {
             } else {
                 if(shoots[i].owner == "goober2" && goober2Health > 0) {
                     let shoot = shoots[i]
-                    
+                    //archer
                     if BoxCollision(aPos: CGPoint(x: goober.position.x - 20, y: goober.position.y - 20),aSize: CGSize(width: 40, height: 40),bPos: shoot.position, bSize: shoot.size) {
                         gooberHealth -= 1
-                       // goober2HealthLabel.text = "P2 HP: \(goober2Health)"
                         shoot.removeFromParent()
                         shoots.remove(at: i)
                         
@@ -468,9 +466,7 @@ class GameScene: SKScene {
     func setGameObjsHidden(hidden: Bool) {
         goober.isHidden = hidden
         goober2.isHidden = hidden
-//        winText.isHidden = hidden
-//        winButton.isHidden = hidden
-//        winButtonText.isHidden = hidden
+
         shootButton.isHidden = hidden
         shootButton2.isHidden = hidden
         gooberHealthLabel.isHidden = hidden
@@ -498,8 +494,6 @@ class GameScene: SKScene {
         }
         
         self.lastUpdateTime = currentTime
-//        print("Goober 1 Position: \(goober.position)")
-//        print("Goober 2 Position: \(goober2.position)")
         
         if(!mainMenuOpen) {
             updatePlayers()
@@ -508,6 +502,7 @@ class GameScene: SKScene {
             gooberHealthLabel.text = "Goober 1 HP: \(gooberHealth >= 0 ? gooberHealth : 0)"
             
             if(!gameIsOver) {
+                //archer
                 if(gooberHealth <= 0) {
                     winText.text = "Goober 2 Wins"
                     gameIsOver = true
@@ -515,7 +510,7 @@ class GameScene: SKScene {
                     back2menu.isHidden = false
                     winButton.isHidden = false
                 }
-                
+                //archer
                 if(goober2Health <= 0) {
                     print("test")
                     winText.text = "Goober 1 Wins"
